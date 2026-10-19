@@ -8,7 +8,7 @@ import os as _os; BASE = _os.path.dirname(_os.path.abspath(__file__))
 sys.path.insert(0, BASE)
 from icons import material
 VW, VH = 1280, 720            # source video coordinate space
-OUT = (1617, 910)             # output size (video box in frame)
+OUT = tuple(int(v) for v in _os.environ.get("ANN_OUT", "1617x910").split("x"))   # output size (video box)
 S = 2                         # supersample factor
 CW, CH = VW * S, VH * S
 FPS = 30

@@ -1,0 +1,63 @@
+name: reel-render
+# Renders one vertical reel (1080x1920) in the approved "Design 6 / Caption Style".
+# Trigger: push branch  reel/<job>  containing reel-v2/jobs/<job>/{input.mp4, job.json, annotations.py}
+# Result:  branch  reel-out/<job>  with reel.mp4 (split in 45 MB parts if needed). Delete both branches after download.
+on:
+  push:
+    branches: ["reel/**"]
+permissions:
+  contents: write
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+env:
+  SEGMENTS: "20"          # keep at the free-plan parallel-job limit: more segments = faster render
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.p.outputs.matrix }}
+      job: ${{ steps.p.outputs.job }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - id: p
+        run: |
+          JOB="${GITHUB_REF_NAME#reel/}"
+          echo "job=$JOB" >> "$GITHUB_OUTPUT"
+          echo "matrix=$(python3 reel-v2/render/plan.py reel-v2/jobs/$JOB $SEGMENTS)" >> "$GITHUB_OUTPUT"
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      max-parallel: 20
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg libcairo2
+      - run: pip install -q -r long-template/render/requirements.txt
+      - run: reel-v2/render/reel_segment.sh "$PWD/reel-v2/jobs/${{ needs.plan.outputs.job }}" ${{ matrix.i }} ${{ matrix.start }} ${{ matrix.dur }} seg_${{ matrix.i }}.mp4 4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seg_${{ matrix.i }}
+          path: seg_${{ matrix.i }}.mp4
+          retention-days: 1
+  finalize:
+    needs: [plan, render]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg libcairo2
+      - run: pip install -q -r long-template/render/requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          path: segs
+          merge-multiple: true
+      - run: reel-v2/render/reel_finalize.sh "$PWD/reel-v2/jobs/${{ needs.plan.outputs.job }}" segs reel.mp4
+      - run: |
+          JOB=${{ needs.plan.outputs.job }}
+          mkdir -p /tmp/out && split -b 45M reel.mp4 /tmp/out/reel.mp4.part_
+          cd /tmp/out && git init -q -b "reel-out/$JOB" && git add . \
+            && git -c user.name=bot -c user.email=bot@users.noreply.github.com commit -qm "reel $JOB" \
+            && git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "reel-out/$JOB"

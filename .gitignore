@@ -1,3 +1,5 @@
 long-template/jobs/*/input.mp4
 long-template/render/assets/logo_card*.png
 __pycache__/
+reel-v2/jobs/*/input.mp4
+reel-v2/render/windows.svg
