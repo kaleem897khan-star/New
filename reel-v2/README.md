@@ -4,8 +4,8 @@ Renders the vertical reels (YouTube Shorts / Facebook / Instagram) of a long vid
 **Always render here, never on the AI sandbox, and always with the maximum number of parallel segments** (`SEGMENTS: 20` = free-plan job limit) so it is fast.
 
 ## Split rule (owner, 2026-10-20)
-Every reel 60–120 s, all reels of a video **equal length**, **as few reels as possible**: `n = ceil(video_seconds / 120)`, length = video / n.
-Example: 8:51 (531.3 s) → 5 reels × 106.3 s. Plus a 2.5 s end card per reel.
+**Every reel is at most 90 s in total (video part ≤ 87.5 s + 2.5 s end card)** – Facebook Reels only accept 3–90 s, and all platforms get the same file. All reels of a video **equal length**, **as few reels as possible**: `n = ceil(video_seconds / 87.5)`, length = video / n (aim ≥ 60 s).
+Example: 8:51 (531.3 s) → 7 reels × 75.9 s (+ 2.5 s end card = 78.4 s).
 
 ## Layout (top → bottom)
 | Element | Spec |

@@ -1,4 +1,4 @@
-"""Creates every reel job of one long video (owner split rule: 60-120 s, equal, fewest reels).
+"""Creates every reel job of one long video (owner split rule: max 90 s per reel incl. end card, equal, fewest reels).
 usage: make_jobs.py <video.mp4> <long_annotations.py> <story.json> <job_prefix>
 story.json = {"kicker": ..., "title": ..., "sections": [[start_sec, "Step 1", "Caption"], ...]}  (times of the trimmed long video)
 Writes reel-v2/jobs/<prefix>-p<N>/{input.mp4, job.json, annotations.py}."""
@@ -6,7 +6,8 @@ import json, math, os, subprocess, sys
 video, ann_file, story_file, prefix = sys.argv[1:5]
 HERE = os.path.dirname(os.path.abspath(__file__)); JOBS = os.path.join(HERE, "..", "jobs")
 dur = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", video]))
-n = max(1, math.ceil(dur / 120.0)); L = dur / n
+MAX_VIDEO = 87.5   # owner rule 2026-10-20: a reel is at most 90 s INCLUDING the 2.5 s end card (Facebook Reels API limit)
+n = max(1, math.ceil(dur / MAX_VIDEO)); L = dur / n
 story = json.load(open(story_file)); secs = story["sections"]
 g = {}; exec(open(ann_file).read(), g); ANN = g["ANN_FULL"]
 AD_SEC, N_SERVICES = 9.0, 9
