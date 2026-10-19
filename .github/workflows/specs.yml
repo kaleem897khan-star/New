@@ -1,0 +1,21 @@
+name: runner-specs
+on:
+  push:
+    branches: ["specs/**"]
+permissions:
+  contents: write
+jobs:
+  specs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          mkdir -p /tmp/o && cd /tmp/o
+          { echo "== lscpu"; lscpu; echo "== nproc"; nproc; echo "== free"; free -h;
+            echo "== dmidecode memory"; sudo dmidecode -t memory 2>&1 | grep -E "Type:|Speed|Size|Manufacturer" | sort | uniq -c;
+            echo "== dmidecode system"; sudo dmidecode -t system 2>&1 | grep -E "Manufacturer|Product|Version";
+            echo "== disk"; df -h /; lsblk -d -o NAME,SIZE,ROTA,MODEL;
+            echo "== os"; cat /etc/os-release | head -3; uname -r;
+            echo "== cloud"; curl -s -m 3 -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2021-02-01" | python3 -c "import sys,json;d=json.load(sys.stdin);print(d.get('vmSize'),d.get('location'))" 2>&1;
+          } > specs.txt 2>&1
+          git init -q -b "$GITHUB_REF_NAME-out" && git add . && git -c user.name=bot -c user.email=bot@x commit -qm specs
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "$GITHUB_REF_NAME-out"
