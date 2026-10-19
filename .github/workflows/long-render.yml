@@ -1,0 +1,71 @@
+name: long-render
+# Renders a long (16:9) RDP School video with the approved frame.
+# Trigger: push a branch named  render/<job-name>  that contains
+#   long-template/jobs/<job-name>/input.mp4        (already trimmed + IPs blurred)
+#   long-template/jobs/<job-name>/annotations.py   (highlights + Like/Subscribe times)
+# Result: branch  output/<job-name>  with final.mp4 split in parts (final.mp4.part_aa, _ab ...)
+on:
+  push:
+    branches: ["render/**"]
+permissions:
+  contents: write
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+env:
+  SEGMENTS: "20"
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.p.outputs.matrix }}
+      job: ${{ steps.p.outputs.job }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - id: p
+        run: |
+          JOB="${GITHUB_REF_NAME#render/}"
+          echo "job=$JOB" >> "$GITHUB_OUTPUT"
+          echo "matrix=$(python3 long-template/render/plan.py long-template/jobs/$JOB $SEGMENTS)" >> "$GITHUB_OUTPUT"
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      max-parallel: 20
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg libcairo2
+      - run: pip install -q -r long-template/render/requirements.txt
+      - run: python3 long-template/render/logo_card.py
+      - name: Render segment ${{ matrix.i }}
+        run: |
+          J=$PWD/long-template/jobs/${{ needs.plan.outputs.job }}
+          long-template/render/render_segment.sh "$J" ${{ matrix.i }} ${{ matrix.start }} ${{ matrix.dur }} seg_${{ matrix.i }}.mp4 4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seg_${{ matrix.i }}
+          path: seg_${{ matrix.i }}.mp4
+          retention-days: 1
+  finalize:
+    needs: [plan, render]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install -q -r long-template/render/requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          path: segs
+          merge-multiple: true
+      - run: long-template/render/finalize.sh "$PWD/long-template/jobs/${{ needs.plan.outputs.job }}" segs final.mp4
+      - name: Publish result to branch output/<job>
+        run: |
+          JOB=${{ needs.plan.outputs.job }}
+          mkdir -p /tmp/out && split -b 45M final.mp4 /tmp/out/final.mp4.part_
+          ls -la /tmp/out
+          cd /tmp/out && git init -q -b "output/$JOB" && git add . \
+            && git -c user.name=bot -c user.email=bot@users.noreply.github.com commit -qm "render $JOB" \
+            && git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "output/$JOB"
