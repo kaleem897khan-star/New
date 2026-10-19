@@ -1,0 +1,64 @@
+{
+  "part": 2,
+  "total_parts": 5,
+  "kicker": "Windows VPS Tutorial",
+  "title": "How to Login to Windows VPS",
+  "src_start": 106.26,
+  "src_end": 212.52,
+  "ad_start": 3,
+  "lcs": [
+    3.0,
+    50.1,
+    95.3
+  ],
+  "captions": [
+    [
+      0.0,
+      4.24,
+      "Step 2",
+      "Open Remote Desktop Connection"
+    ],
+    [
+      4.24,
+      21.24,
+      "Step 3",
+      "Copy & Paste the IP Address"
+    ],
+    [
+      21.24,
+      27.94,
+      "Step 4",
+      "Click Show Options"
+    ],
+    [
+      27.94,
+      62.24,
+      "Step 5",
+      "Enter the Username"
+    ],
+    [
+      62.24,
+      69.74,
+      "Step 6",
+      "Click Connect"
+    ],
+    [
+      69.74,
+      79.74,
+      "Step 6",
+      "Trust the Connection"
+    ],
+    [
+      79.74,
+      99.74,
+      "Step 7",
+      "Copy & Paste the Password"
+    ],
+    [
+      99.74,
+      106.36,
+      "Tip",
+      "Credentials Error? Try Again"
+    ]
+  ]
+}

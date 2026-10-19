@@ -1,0 +1,58 @@
+{
+  "part": 3,
+  "total_parts": 5,
+  "kicker": "Windows VPS Tutorial",
+  "title": "How to Login to Windows VPS",
+  "src_start": 212.52,
+  "src_end": 318.78,
+  "ad_start": 6,
+  "lcs": [
+    3.0,
+    50.1,
+    95.3
+  ],
+  "captions": [
+    [
+      0.0,
+      27.48,
+      "Tip",
+      "Credentials Error? Try Again"
+    ],
+    [
+      27.48,
+      37.48,
+      "Tip",
+      "Use a Different Account"
+    ],
+    [
+      37.48,
+      47.48,
+      "Step 8",
+      "Enter Username & Password"
+    ],
+    [
+      47.48,
+      54.48,
+      "Step 9",
+      "Accept the Certificate"
+    ],
+    [
+      54.48,
+      63.48,
+      "Step 10",
+      "Connecting to Your VPS"
+    ],
+    [
+      63.48,
+      75.48,
+      "Done",
+      "You Are Inside Your VPS"
+    ],
+    [
+      75.48,
+      106.36,
+      "Tip",
+      "Login with IP and Port"
+    ]
+  ]
+}

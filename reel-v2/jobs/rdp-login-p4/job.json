@@ -1,0 +1,46 @@
+{
+  "part": 4,
+  "total_parts": 5,
+  "kicker": "Windows VPS Tutorial",
+  "title": "How to Login to Windows VPS",
+  "src_start": 318.78,
+  "src_end": 425.04,
+  "ad_start": 0,
+  "lcs": [
+    3.0,
+    50.1,
+    95.3
+  ],
+  "captions": [
+    [
+      0.0,
+      27.22,
+      "Tip",
+      "Login with IP and Port"
+    ],
+    [
+      27.22,
+      35.22,
+      "Step 11",
+      "Connect with IP:Port"
+    ],
+    [
+      35.22,
+      49.22,
+      "Done",
+      "Your VPS Desktop Is Ready"
+    ],
+    [
+      49.22,
+      91.22,
+      "Bonus",
+      "Download Google Chrome"
+    ],
+    [
+      91.22,
+      106.36,
+      "Bonus",
+      "Save Your RDP Connection"
+    ]
+  ]
+}

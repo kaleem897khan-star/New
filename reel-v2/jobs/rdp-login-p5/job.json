@@ -1,0 +1,58 @@
+{
+  "part": 5,
+  "total_parts": 5,
+  "kicker": "Windows VPS Tutorial",
+  "title": "How to Login to Windows VPS",
+  "src_start": 425.04,
+  "src_end": 531.3,
+  "ad_start": 3,
+  "lcs": [
+    3.0,
+    50.1,
+    95.3
+  ],
+  "captions": [
+    [
+      0.0,
+      10.96,
+      "Bonus",
+      "Save Your RDP Connection"
+    ],
+    [
+      10.96,
+      18.96,
+      "Bonus",
+      "Click Save As"
+    ],
+    [
+      18.96,
+      40.96,
+      "Bonus",
+      "Save the .RDP File"
+    ],
+    [
+      40.96,
+      56.96,
+      "Bonus",
+      "Open the Saved .RDP File"
+    ],
+    [
+      56.96,
+      64.96,
+      "Done",
+      "Login in One Click"
+    ],
+    [
+      64.96,
+      76.96,
+      "Bonus",
+      "Chrome Is Installing"
+    ],
+    [
+      76.96,
+      106.36,
+      "RDP X Cloud",
+      "Your RDP in 5 Minutes"
+    ]
+  ]
+}

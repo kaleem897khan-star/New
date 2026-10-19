@@ -1,0 +1,32 @@
+{
+  "kicker": "Windows VPS Tutorial",
+  "title": "How to Login to Windows VPS",
+  "sections": [
+    [0,     "Step 1", "Check Your VPS Details"],
+    [60,    "Step 1", "Note the IP, Username & Password"],
+    [102.4, "Step 2", "Open Remote Desktop Connection"],
+    [110.5, "Step 3", "Copy & Paste the IP Address"],
+    [127.5, "Step 4", "Click Show Options"],
+    [134.2, "Step 5", "Enter the Username"],
+    [168.5, "Step 6", "Click Connect"],
+    [176.0, "Step 6", "Trust the Connection"],
+    [186.0, "Step 7", "Copy & Paste the Password"],
+    [206.0, "Tip",    "Credentials Error? Try Again"],
+    [240.0, "Tip",    "Use a Different Account"],
+    [250.0, "Step 8", "Enter Username & Password"],
+    [260.0, "Step 9", "Accept the Certificate"],
+    [267.0, "Step 10", "Connecting to Your VPS"],
+    [276.0, "Done",   "You Are Inside Your VPS"],
+    [288.0, "Tip",    "Login with IP and Port"],
+    [346.0, "Step 11", "Connect with IP:Port"],
+    [354.0, "Done",   "Your VPS Desktop Is Ready"],
+    [368.0, "Bonus",  "Download Google Chrome"],
+    [410.0, "Bonus",  "Save Your RDP Connection"],
+    [436.0, "Bonus",  "Click Save As"],
+    [444.0, "Bonus",  "Save the .RDP File"],
+    [466.0, "Bonus",  "Open the Saved .RDP File"],
+    [482.0, "Done",   "Login in One Click"],
+    [490.0, "Bonus",  "Chrome Is Installing"],
+    [502.0, "RDP X Cloud", "Your RDP in 5 Minutes"]
+  ]
+}

@@ -21,7 +21,16 @@ Example: 8:51 (531.3 s) → 5 reels × 106.3 s. Plus a 2.5 s end card per reel.
 | Bottom ~100 px | kept empty (platform UI) |
 | End card (2.5 s) | Thank You for Watching, TO BE CONTINUED in PART n+1 (last: SERIES COMPLETE), solid WhatsApp-green gradient button with WHITE number, website, socials |
 
-## Make a reel
+## Make all reels of a video (fast way)
+```bash
+# story.json: kicker, title and the step captions of the whole long video (English), see jobs/rdp-login.story.json
+python3 reel-v2/render/make_jobs.py <trimmed_blurred.mp4> long-template/jobs/<job>/annotations.py reel-v2/jobs/<name>.story.json <name>
+# -> reel-v2/jobs/<name>-p1 ... -pN  (equal parts, ad rotation continues, Like/Subscribe at start/middle/end)
+for n in 1 2 3 4 5; do git checkout -B reel/<name>-p$n main && git add -f reel-v2/jobs/<name>-p$n/input.mp4 && git commit -m "reel <name>-p$n" && git push -f origin reel/<name>-p$n; done
+```
+All parts render in parallel on Actions (20 jobs at a time). This is THE approved reel template from 2026-10-20 on – use it for every new video; only `story.json`, the highlights file and the video change.
+
+## Make one reel by hand
 1. Cut the part from the **trimmed, IP-blurred** long-video input: `ffmpeg -ss <start> -t <len> -i input.mp4 -c:v libx264 -crf 16 -c:a aac jobs/<job>/input.mp4`
 2. `jobs/<job>/job.json` (copy `jobs/rdp-login-p1/job.json`): part, total_parts, kicker, title, subtitle, ad_start, lcs, captions (times relative to the clip).
 3. `jobs/<job>/annotations.py`: the long video's highlights that fall in this part, times shifted to the clip (see the example).
