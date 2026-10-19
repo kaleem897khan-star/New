@@ -124,7 +124,7 @@ def bar_content(t):
     return lay
 
 out = sys.stdout.buffer
-for i in range(int(DUR * FPS)):
+for i in range(int(round(DUR * FPS))):
     t = TS + i / FPS
     bg = background(t).convert("RGBA")
     bg.alpha_composite(static_under)
