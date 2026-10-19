@@ -3,14 +3,32 @@
   "total_parts": 5,
   "kicker": "Windows VPS Tutorial",
   "title": "How to Login to Windows VPS",
-  "subtitle": "Using Remote Desktop (RDP) • Step by Step",
   "src_start": 0.0,
   "src_end": 106.26,
   "ad_start": 0,
-  "lcs": [3.0, 50.0, 95.0],
+  "lcs": [
+    3.0,
+    50.0,
+    95.0
+  ],
   "captions": [
-    [0.0, 60.0, "Step 1", "Check Your VPS Details"],
-    [60.0, 102.4, "Step 1", "Note the IP, Username & Password"],
-    [102.4, 106.3, "Step 2", "Open Remote Desktop Connection"]
+    [
+      0.0,
+      60.0,
+      "Step 1",
+      "Check Your VPS Details"
+    ],
+    [
+      60.0,
+      102.4,
+      "Step 1",
+      "Note the IP, Username & Password"
+    ],
+    [
+      102.4,
+      106.3,
+      "Step 2",
+      "Open Remote Desktop Connection"
+    ]
   ]
 }

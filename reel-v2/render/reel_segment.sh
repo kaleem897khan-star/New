@@ -12,7 +12,7 @@ piece() {
     -f rawvideo -pix_fmt rgb24 -s 1080x1920 -r 30 -i - \
     -ss "$s" -t "$d" -i "$JOB/input.mp4" -i "$R/vmask_reel.png" \
     -f rawvideo -pix_fmt rgba -s 1036x583 -r 30 -i "$fifo" \
-    -filter_complex "[1:v]setpts=PTS-STARTPTS,scale=1036:583:flags=lanczos[src];[src][3:v]overlay=0:0:format=auto,format=rgba[v];[2:v]format=gray[m];[v][m]alphamerge[vm];[0:v][vm]overlay=22:318:shortest=1,format=yuv420p[out]" \
+    -filter_complex "[1:v]setpts=PTS-STARTPTS,scale=1036:583:flags=lanczos[src];[src][3:v]overlay=0:0:format=auto,format=rgba[v];[2:v]format=gray[m];[v][m]alphamerge[vm];[0:v][vm]overlay=22:262:shortest=1,format=yuv420p[out]" \
     -map "[out]" -an -c:v libx264 -crf 19 -preset fast -r 30 "$TMP/p_$n.mp4"
   wait
 }

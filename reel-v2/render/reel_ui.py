@@ -18,7 +18,7 @@ sys.path.insert(0, SHARED)
 from icons import whatsapp, instagram, facebook, tiktok, youtube, material, svg_img  # noqa: E402
 
 W, H, FPS = 1080, 1920, 30
-VIDEO_BOX = (22, 318, 1058, 901)          # 1036 x 583 = full 16:9, nothing cropped
+VIDEO_BOX = (22, 262, 1058, 845)          # 1036 x 583 = full 16:9, nothing cropped
 NAVY = (11, 15, 23); CYAN = (0, 168, 204); GREEN = (25, 212, 121); GOLD = (255, 196, 0); WHITE = (255, 255, 255)
 _fc = {}
 def F(w, s):
@@ -92,12 +92,11 @@ def build_static(job):
     f = F("ExtraBold", 27); pt = f"PART {job['part']}"; pw = int(ImageDraw.Draw(s).textlength(pt, font=f)) + 46; pb = (W - 40 - pw, 49, W - 40, 109)
     shadow(s, pb, 30, 140, 10, 5); ImageDraw.Draw(s).rounded_rectangle(pb, 30, fill=GREEN); text(s, ((pb[0] + pb[2]) // 2, 79), pt, f, NAVY, sh=False)
     # title block (kicker / title / subtitle)
-    spaced(s, (W // 2, 152), job["kicker"].upper(), F("SemiBold", 21), (120, 220, 255), 5)
-    ImageDraw.Draw(s).rounded_rectangle((W // 2 - 40, 172, W // 2 + 40, 175), 2, fill=GOLD)
+    spaced(s, (W // 2, 146), job["kicker"].upper(), F("SemiBold", 21), (120, 220, 255), 5)
+    ImageDraw.Draw(s).rounded_rectangle((W // 2 - 40, 166, W // 2 + 40, 169), 2, fill=GOLD)
     tf = F("ExtraBold", 56)
     while ImageDraw.Draw(s).textlength(job["title"], font=tf) > W - 90: tf = F("ExtraBold", tf.size - 2)
-    text(s, (W // 2, 222), job["title"], tf, (240, 248, 255))
-    text(s, (W // 2, 279), job["subtitle"], F("Medium", 25), (200, 225, 245))
+    text(s, (W // 2, 212), job["title"], tf, (240, 248, 255))
     # video frame (shadow + white glow border); the video itself is drawn by ffmpeg
     x0, y0, x1, y1 = VIDEO_BOX; shadow(s, VIDEO_BOX, 26, 190, 22, 12)
     glow_border(s, (x0 - 3, y0 - 3, x1 + 3, y1 + 3), 29, WHITE, 4, 14, .5)
@@ -105,7 +104,7 @@ def build_static(job):
     return s
 
 # ------------------------------------------------------------------ step caption
-CAP_Y = 1010
+CAP_Y = 935
 def caption_layer(step, label):
     c = layer(W, 260)
     text(c, (W // 2, 26), step.upper(), F("ExtraBold", 28), GOLD)
@@ -148,7 +147,7 @@ SERVICES = [
     ("MOBILE APPS", ((6, 182, 212), (59, 130, 246)), "Mobile Apps", "Your idea as an Android app",
      [("m:phone_android", "App Development", (56, 189, 248)), ("s:googleplay", "Play Store", (52, 211, 153))]),
 ]
-AD_BOX = (40, 1268, W - 40, 1548); AD_SEC = 9.0
+AD_BOX = (40, 1222, W - 40, 1502); AD_SEC = 9.0
 def icon_for(spec, size, col):
     k, v = spec.split(":", 1)
     if k == "m": return mi(v, size, col)
@@ -189,7 +188,7 @@ def ad_layer(i):
     return c, tiles
 
 # ------------------------------------------------------------------ Like / Comment / Subscribe pop-up (comes, gets clicked, leaves)
-LCS_Y = 1572; LCS_DUR = 7.0; CLICKS = (1.6, 2.8, 4.0, 5.2)
+LCS_Y = 1528; LCS_DUR = 7.0; CLICKS = (1.6, 2.8, 4.0, 5.2)
 TH = mi("thumb_up", 34, WHITE); TH_B = mi("thumb_up", 34, (62, 166, 255)); CM = mi("comment", 34, WHITE); CM_B = mi("comment", 34, (62, 166, 255))
 BELL = mi("notifications_active", 34, WHITE)
 def cursor():
@@ -200,9 +199,14 @@ def lcs(img, t):
     e = min(eout(t / .45), eout((LCS_DUR - t) / .45))
     if e <= 0: return
     c1, cc, c2, c3 = CLICKS; s = back(t / .6)
-    row = layer(W, 120); x0, w = 60, W - 120; hgt = 84
-    shadow(row, (x0, 10, x0 + w, 10 + hgt), 42, 140, 12, 6); panel(row, (x0, 10, x0 + w, 10 + hgt), 42, tint=(15, 15, 22), ta=225, border=(255, 255, 255, 70))
+    RH = 196; row = layer(W, RH); x0, w = 60, W - 120; hgt = 84
+    shadow(row, (x0, 10, x0 + w, 10 + 170), 42, 140, 12, 6); panel(row, (x0, 10, x0 + w, 10 + 170), 42, tint=(15, 15, 22), ta=225, border=(255, 255, 255, 70))
     cy = 10 + hgt // 2
+    ImageDraw.Draw(row).line((x0 + 40, 10 + hgt, x0 + w - 40, 10 + hgt), fill=(255, 255, 255, 40), width=2)
+    row.alpha_composite(mi("bolt", 34, GOLD), (x0 + 34, 10 + hgt + 26))
+    text(row, (x0 + 76, 10 + hgt + 43), "Get Your RDP Just in 5 Minutes", F("ExtraBold", 27), GOLD, anchor="lm")
+    mb = (x0 + w - 236, 10 + hgt + 18, x0 + w - 20, 10 + hgt + 70); ImageDraw.Draw(row).rounded_rectangle(mb, 26, fill=(37, 211, 102))
+    row.alpha_composite(whatsapp(32), (mb[0] + 12, mb[1] + 10)); text(row, (mb[0] + 54, (mb[1] + mb[3]) // 2), "Message Us", F("ExtraBold", 22), WHITE, anchor="lm", sh=False)
     def press(c_): return 1 - .12 * max(0, 1 - abs(t - c_) / .12)
     def pop(ic, on, c_, x):
         k = (1 + .25 * max(0, 1 - abs(t - c_ - .1) / .25)) * press(c_) if on else 1
@@ -226,29 +230,36 @@ def lcs(img, t):
     clk = [c_ for c_ in CLICKS if 0 <= t - c_ < .35]
     if clk:
         r = 8 + 30 * eout((t - clk[0]) / .35); ImageDraw.Draw(row).ellipse((px - r, py - r, px + r, py + r), outline=(255, 255, 255, int(220 * (1 - (t - clk[0]) / .35))), width=3)
-    if t > .5: row.alpha_composite(CUR, (int(px), int(min(py, 118 - 46))))
-    if s < .999: row = row.resize((W, max(1, int(120 * s))), Image.LANCZOS)
-    img.alpha_composite(alpha(row, e), (0, int(LCS_Y + (120 - row.height) / 2)))
+    if t > .5: row.alpha_composite(CUR, (int(px), int(min(py, RH - 46))))
+    if s < .999: row = row.resize((W, max(1, int(RH * s))), Image.LANCZOS)
+    img.alpha_composite(alpha(row, e), (0, int(LCS_Y + (RH - row.height) / 2)))
 
 # ------------------------------------------------------------------ social bar: WhatsApp number fixed, the rest rotates
-SOC_Y = 1690; SOC_H = 64
-SOCIALS = [(instagram, "@rdpxcloud"), (facebook, "@rdpxcloud"), (tiktok, "@rdpxcloud"), (youtube, "RDP School")]
+SOC_Y = 1748; SOC_H = 70
+def web_icon(sz):
+    b = layer(sz, sz); ImageDraw.Draw(b).ellipse((0, 0, sz - 1, sz - 1), fill=(0, 140, 210)); ic = mi("language", int(sz * .7), WHITE); b.alpha_composite(ic, ((sz - ic.width) // 2, (sz - ic.height) // 2)); return b
+SOCIALS = [(facebook, "FOLLOW US", "RDP X Cloud"), (instagram, "FOLLOW US", "@rdpxcloud"), (youtube, "SUBSCRIBE", "RDP School"),
+           (tiktok, "FOLLOW US", "@rdpxcloud"), (web_icon, "VISIT WEBSITE", "www.rdpxcloud.com")]
 def build_social_static():
     s = layer(W, SOC_H + 20); x0, x1 = 50, W - 50
     panel(s, (x0, 10, x1, 10 + SOC_H), SOC_H // 2, ta=38, border=(255, 255, 255, 120))
-    s.alpha_composite(whatsapp(40), (x0 + 22, 10 + (SOC_H - 40) // 2))
-    text(s, (x0 + 72, 10 + SOC_H // 2), "+92-313-8303-109", F("ExtraBold", 27), (125, 255, 180), anchor="lm")
-    ImageDraw.Draw(s).line((x0 + 380, 26, x0 + 380, 10 + SOC_H - 16), fill=(255, 255, 255, 110), width=2)
+    s.alpha_composite(whatsapp(42), (x0 + 22, 10 + (SOC_H - 42) // 2))
+    text(s, (x0 + 74, 10 + SOC_H // 2 - 14), "CONTACT US", F("SemiBold", 15), (190, 235, 205), anchor="lm", sh=False)
+    text(s, (x0 + 74, 10 + SOC_H // 2 + 11), "+92-313-8303-109", F("ExtraBold", 25), (125, 255, 180), anchor="lm")
+    ImageDraw.Draw(s).line((x0 + 375, 26, x0 + 375, 10 + SOC_H - 16), fill=(255, 255, 255, 110), width=2)
     return s
 SOC_ITEMS = []
-for fn, t_ in SOCIALS:
-    it = layer(560, SOC_H); it.alpha_composite(fn(38), (0, (SOC_H - 38) // 2)); text(it, (52, SOC_H // 2), t_, F("SemiBold", 27), anchor="lm"); SOC_ITEMS.append(it)
+for fn, lab, t_ in SOCIALS:
+    it = layer(560, SOC_H); it.alpha_composite(fn(40), (0, (SOC_H - 40) // 2))
+    text(it, (52, SOC_H // 2 - 14), lab, F("SemiBold", 15), (200, 215, 240), anchor="lm", sh=False)
+    tf_ = F("ExtraBold", 25)
+    text(it, (52, SOC_H // 2 + 11), t_, tf_, anchor="lm"); SOC_ITEMS.append(it)
 SOC_SLOT = 4.0
 def social(img, t, static):
     img.alpha_composite(static, (0, SOC_Y - 10))
     k = int(t // SOC_SLOT); lt = t - k * SOC_SLOT; a = min(eout(lt / .4) if k > 0 else 1, eout((SOC_SLOT - lt) / .4))
     dy = int((1 - min(1, lt / .4)) * 16) if k > 0 and lt < .4 else 0
-    img.alpha_composite(alpha(SOC_ITEMS[k % len(SOC_ITEMS)], a), (50 + 410, SOC_Y + dy))
+    img.alpha_composite(alpha(SOC_ITEMS[k % len(SOC_ITEMS)], a), (50 + 400, SOC_Y + dy))
 
 # ------------------------------------------------------------------ frame composer
 class Reel:
@@ -298,8 +309,14 @@ class Reel:
         text(e, (W // 2, 730), "SERIES COMPLETE" if last else "TO BE CONTINUED", F("ExtraBold", 30), (4, 33, 15), sh=False)
         if not last: text(e, (W // 2, 800), f"in PART {j['part'] + 1}", F("ExtraBold", 64), WHITE, sh=False)
         text(e, (W // 2, 960), "Need a VPS / RDP?", F("ExtraBold", 50)); text(e, (W // 2, 1025), "Contact us anytime, we are 24/7 online", F("Medium", 30), (210, 225, 245))
-        cb = (150, 1090, W - 150, 1190); panel(e, cb, 50, tint=(37, 211, 102), ta=235, border=None)
-        e.alpha_composite(whatsapp(60), (cb[0] + 40, cb[1] + 20)); text(e, (cb[0] + 120, cb[1] + 50), "+92-313-8303-109", F("ExtraBold", 42), anchor="lm")
+        cb = (150, 1090, W - 150, 1190); shadow(e, cb, 50, 160, 14, 6)
+        gw = cb[2] - cb[0]; a_ = np.linspace(0, 1, gw)[None, :, None]
+        gg = np.repeat((np.array((37, 211, 102)) * (1 - a_) + np.array((18, 140, 126)) * a_).astype(np.uint8), 100, 0)
+        gi_ = Image.fromarray(gg).convert("RGBA"); mm = Image.new("L", gi_.size, 0); ImageDraw.Draw(mm).rounded_rectangle((0, 0, gw - 1, 99), 50, fill=255)
+        e.paste(gi_, cb[:2], mm); ImageDraw.Draw(e).rounded_rectangle(cb, 50, outline=(255, 255, 255, 140), width=2)
+        e.alpha_composite(whatsapp(62), (cb[0] + 34, cb[1] + 19))
+        text(e, (cb[0] + 112, cb[1] + 33), "CONTACT US ON WHATSAPP", F("SemiBold", 18), (230, 255, 240), anchor="lm", sh=False)
+        text(e, (cb[0] + 112, cb[1] + 66), "+92-313-8303-109", F("ExtraBold", 40), WHITE, anchor="lm")
         text(e, (W // 2, 1250), "www.rdpxcloud.com", F("SemiBold", 34), (170, 225, 255))
         for n_, (fn, lb) in enumerate([(facebook, "RDP X Cloud"), (instagram, "@rdpxcloud"), (tiktok, "@rdpxcloud"), (youtube, "RDP School")]):
             col, row_ = n_ % 2, n_ // 2; bx = 70 + col * 480; by = 1320 + row_ * 110

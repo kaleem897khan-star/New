@@ -12,14 +12,14 @@ Example: 8:51 (531.3 s) → 5 reels × 106.3 s. Plus a 2.5 s end card per reel.
 |---|---|
 | Background | one blue theme, big blurred glows (white, gold, light blue, peach, cyan) drifting and cross-fading slowly (same as the long video) |
 | Header | RDP X CLOUD glass pill (white text) left, green `PART n` right (never the total) |
-| Title block | small spaced kicker (e.g. "WINDOWS VPS TUTORIAL") + gold line, title 56 px (auto-shrinks), subtitle 25 px |
-| Video | **full 16:9, nothing cropped**: 1036x583 at (22,318), radius 26, white glow border, gold highlight circles/arrows inside (`annotations.py`) |
+| Title block | small spaced kicker (e.g. "WINDOWS VPS TUTORIAL") + gold line + title 56 px (auto-shrinks). **No subtitle line** (owner) |
+| Video | **full 16:9, nothing cropped**: 1036x583 at (22,262), radius 26, white glow border, gold highlight circles/arrows inside (`annotations.py`) |
 | Step caption | "STEP n" gold + 1–2 line caption 64 px (`captions` in job.json, English) |
 | Ad card | ribbon **"AD • OUR SERVICES"** + ONE service at a time (9 s each, tiles light up one by one): VPS/RDP → OS → RAM → Locations → Dedicated → Installation → Bots → Websites → Mobile Apps → repeats. `ad_start` continues the rotation in the next part. |
-| Like/Comment/Subscribe | pops up only at `lcs` times (start, middle, near end), cursor clicks Like → Comment → Subscribe → Bell, then disappears. Click + bell sounds. |
-| Social bar | WhatsApp +92-313-8303-109 fixed, right side rotates Instagram / Facebook / TikTok @rdpxcloud / YouTube RDP School every 4 s |
-| Bottom ~230 px | kept empty on purpose (platform buttons/caption cover it) |
-| End card (2.5 s) | Thank You for Watching, TO BE CONTINUED in PART n+1 (last: SERIES COMPLETE), WhatsApp, website, socials |
+| Like/Comment/Subscribe | pops up only at `lcs` times (start, middle, near end), cursor clicks Like → Comment → Subscribe → Bell, then disappears. Second row inside the same card: "Get Your RDP Just in 5 Minutes" + green "Message Us" (WhatsApp). Click + bell sounds. |
+| Social bar (y 1748) | fixed: WhatsApp "CONTACT US +92-313-8303-109"; right side rotates every 4 s with an action label: Facebook FOLLOW US RDP X Cloud → Instagram FOLLOW US @rdpxcloud → YouTube SUBSCRIBE RDP School → TikTok FOLLOW US @rdpxcloud → VISIT WEBSITE www.rdpxcloud.com |
+| Bottom ~100 px | kept empty (platform UI) |
+| End card (2.5 s) | Thank You for Watching, TO BE CONTINUED in PART n+1 (last: SERIES COMPLETE), solid WhatsApp-green gradient button with WHITE number, website, socials |
 
 ## Make a reel
 1. Cut the part from the **trimmed, IP-blurred** long-video input: `ffmpeg -ss <start> -t <len> -i input.mp4 -c:v libx264 -crf 16 -c:a aac jobs/<job>/input.mp4`
