@@ -7,7 +7,7 @@ R=$(cd "$(dirname "$0")" && pwd)
 export ANN_FILE="$JOB/annotations.py"
 DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$JOB/input.mp4")
 python3 "$R/sfx.py" "$DUR" 0 /tmp/sfx.wav
-ls "$SEGS"/seg_*.mp4 | sort | sed "s/.*/file '&'/" > /tmp/segs.txt
+ls "$(cd "$SEGS" && pwd)"/seg_*.mp4 | sort | sed "s/.*/file '&'/" > /tmp/segs.txt
 ffmpeg -v error -y -f concat -safe 0 -i /tmp/segs.txt -c copy /tmp/video_only.mp4
 ffmpeg -v error -y -i /tmp/video_only.mp4 -i "$JOB/input.mp4" -i /tmp/sfx.wav \
   -filter_complex "[1:a][2:a]amix=inputs=2:normalize=0:duration=first[a]" \

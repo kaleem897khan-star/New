@@ -32,7 +32,7 @@ Workflow `long-render.yml` splits the video into 20 equal segments rendered in p
 ```bash
 git push origin --delete render/<job> output/<job>
 ```
-Segment artifacts expire after 1 day.
+Segment artifacts expire after 1 day. If only the join step failed, push branch `finalize/<job>` with `jobs/<job>/RUN_ID` (the long-render run id) to re-join without re-rendering (`long-finalize.yml`).
 
 ## Local render (slow, ~4 fps on 2 cores)
 ```bash

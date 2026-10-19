@@ -1,0 +1,36 @@
+name: long-finalize
+# Re-runs only the join + audio step using the segments of an earlier long-render run.
+# Trigger: push branch  finalize/<job-name>  containing long-template/jobs/<job-name>/input.mp4
+#          and a file long-template/jobs/<job-name>/RUN_ID with the long-render run id.
+on:
+  push:
+    branches: ["finalize/**"]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: j
+        run: |
+          JOB="${GITHUB_REF_NAME#finalize/}"
+          echo "job=$JOB" >> "$GITHUB_OUTPUT"
+          echo "run=$(cat long-template/jobs/$JOB/RUN_ID)" >> "$GITHUB_OUTPUT"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install -q -r long-template/render/requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          path: segs
+          merge-multiple: true
+          run-id: ${{ steps.j.outputs.run }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: ls -la segs && long-template/render/finalize.sh "$PWD/long-template/jobs/${{ steps.j.outputs.job }}" segs final.mp4
+      - name: Publish result to branch output/<job>
+        run: |
+          JOB=${{ steps.j.outputs.job }}
+          mkdir -p /tmp/out && split -b 45M final.mp4 /tmp/out/final.mp4.part_
+          cd /tmp/out && git init -q -b "output/$JOB" && git add . \
+            && git -c user.name=bot -c user.email=bot@users.noreply.github.com commit -qm "render $JOB" \
+            && git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "output/$JOB"
