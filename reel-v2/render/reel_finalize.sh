@@ -9,5 +9,5 @@ ffmpeg -v error -y -f concat -safe 0 -i /tmp/l.txt -c copy /tmp/v.mp4
 python3 "$R/reel_sfx.py" "$JOB" "$DUR" /tmp/sfx.wav
 ffmpeg -v error -y -i /tmp/v.mp4 -i "$JOB/input.mp4" -i /tmp/sfx.wav \
   -filter_complex "[1:a][2:a]amix=inputs=2:normalize=0:duration=first,afade=t=out:st=$(python3 -c "print(max(0,$DUR-0.4))"):d=0.4,apad[a]" \
-  -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 192k -shortest -movflags +faststart "$OUT"
+  -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 128k -ar 48000 -ac 2 -shortest -use_editlist 0 -movflags +faststart "$OUT"   # Instagram API spec: no edit list, moov first, AAC 128k 48 kHz
 ffprobe -v error -show_entries format=duration,size -of default=nw=1 "$OUT"
